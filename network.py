@@ -1,7 +1,7 @@
 import tensorflow as tf
 import pickle
 import numpy as np
-train_x, train_y, test_x, test_y, n_classes = pickle.load('note_features.pickle')
+train_x, train_y, test_x, test_y, n_classes = pickle.load(open('note_features.pickle', 'rb'))
 
 n_nodes_hl1 = 500
 n_nodes_hl2 = 500
@@ -9,12 +9,12 @@ n_nodes_hl2 = 500
 #n_classes = 2
 hm_data = 2000000
 
-batch_size = 32
+batch_size = 2
 hm_epochs = 10
 
-x = tf.placeholder('float')
+n = 2
+x = tf.placeholder('float', [None, n])
 y = tf.placeholder('float')
-n = 2 # 2638 # NEEDS TO BE RECALCULATED
 
 current_epoch = tf.Variable(1)
 
@@ -28,8 +28,7 @@ hidden_2_layer = {'f_fum':n_nodes_hl2,
 
 output_layer = {'f_fum':None,
                 'weight':tf.Variable(tf.random_normal([n_nodes_hl2, n_classes])),
-                'bias':tf.Variable(tf.random_normal([n_classes])),}
-
+                'bias':tf.Variable(tf.random_normal([n_classes]))}
 
 def neural_network_model(data):
 
@@ -49,6 +48,7 @@ def train_neural_network(x):
     optimizer = tf.train.AdamOptimizer().minimize(cost)
 
     hm_epochs = 10
+    saver = tf.train.Saver()
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         for epoch in range(hm_epochs):
@@ -66,8 +66,10 @@ def train_neural_network(x):
         correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
         print('Accuracy:', accuracy.eval({x:mnist.test.images,y:mnist.test.labels}))
+        save = saver.save(sess, "model.ckpt")
+        print("Model saved to file:", save)
 
-
+train_neural_network(x)
 saver = tf.train.Saver()
 
 def use_neural_network(input_data):

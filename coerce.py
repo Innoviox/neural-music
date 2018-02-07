@@ -19,16 +19,27 @@ def read_notes(fn):
 
 # read_notes('bach/bach_846.mid')
 
-def sample_handling(sample): #, notes, classification):
-    featureset = []
-    notes = read_notes(sample)
-    for note1, note2 in zip(notes, notes[1:]):
-        featureset.append([note1, note2])
-    
-    return featureset
+def sample_handling(files): #, notes, classification):
+    def _sample_handling(sample):
+        featureset = []
+        notes = read_notes(sample)
+        for note1, note2 in zip(notes, notes[1:]):
+            featureset.append([note1, note2])
+        return featureset
+    ret = [f for file in files for f in _sample_handling(file)]
+    return ret
 
 def create_feature_sets_and_labels(files, test_size = 0.1):
-    features = [f for file in files for f in sample_handling(file)]
+    _features = np.array(sample_handling(files))
+    testing_size = int(test_size*len(_features))
+    classes = np.unique(_features[:,0][:-testing_size])
+    n_classes = len(classes)
+    features = []
+    for f in _features:
+        result = np.zeros(n_classes)
+        result[np.where(classes==f[1])[0]] = 1
+        features.append([f[0], result])
+    
     random.shuffle(features)
     features = np.array(features)
 
@@ -38,9 +49,8 @@ def create_feature_sets_and_labels(files, test_size = 0.1):
     train_y = list(features[:,1][:-testing_size])
     test_x = list(features[:,0][-testing_size:])
     test_y = list(features[:,1][-testing_size:])
-
-    return train_x, train_y, test_x, test_y, len(np.unique(train_x))
-
+    return train_x, train_y, test_x, test_y, n_classes
+    
 files = ['samples/bach/bach_846.mid', 'samples/bach/bach_847.mid', 'samples/bach/bach_850.mid']
 if __name__ == '__main__':
     train_x, train_y, test_x, test_y, n_classes = create_feature_sets_and_labels(files)
