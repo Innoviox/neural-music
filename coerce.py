@@ -39,11 +39,11 @@ def create_feature_sets_and_labels(files, test_size = 0.1):
     test_x = list(features[:,0][-testing_size:])
     test_y = list(features[:,1][-testing_size:])
 
-    return train_x,train_y,test_x,test_y
+    return train_x, train_y, test_x, test_y, len(set(train_x))
 
 files = ['samples/bach/bach_846.mid', 'samples/bach/bach_847.mid', 'samples/bach/bach_850.mid']
 if __name__ == '__main__':
-    train_x,train_y,test_x,test_y = create_feature_sets_and_labels(files)
+    train_x, train_y, test_x, test_y, n_classes = create_feature_sets_and_labels(files)
     # if you want to pickle this data:
     with open('note_features.pickle','wb') as f:
-        pickle.dump([train_x,train_y,test_x,test_y],f)
+        pickle.dump([train_x, train_y, test_x, test_y, n_classes],f)
