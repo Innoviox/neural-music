@@ -1,7 +1,7 @@
 import tensorflow as tf
 import pickle
 import numpy as np
-train_x, train_y, test_x, test_y, n_classes = create_feature_sets_and_labels('/path/to/pos.txt','/path/to/neg.txt')
+train_x, train_y, test_x, test_y, n_classes = pickle.load('note_features.pickle')
 
 n_nodes_hl1 = 500
 n_nodes_hl2 = 500
@@ -14,7 +14,7 @@ hm_epochs = 10
 
 x = tf.placeholder('float')
 y = tf.placeholder('float')
-n = 2638 # NEEDS TO BE RECALCULATED
+n = 2 # 2638 # NEEDS TO BE RECALCULATED
 
 current_epoch = tf.Variable(1)
 

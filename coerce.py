@@ -39,7 +39,7 @@ def create_feature_sets_and_labels(files, test_size = 0.1):
     test_x = list(features[:,0][-testing_size:])
     test_y = list(features[:,1][-testing_size:])
 
-    return train_x, train_y, test_x, test_y, len(set(train_x))
+    return train_x, train_y, test_x, test_y, len(np.unique(train_x))
 
 files = ['samples/bach/bach_846.mid', 'samples/bach/bach_847.mid', 'samples/bach/bach_850.mid']
 if __name__ == '__main__':
