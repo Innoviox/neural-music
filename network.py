@@ -85,6 +85,6 @@ def use_neural_network(input_data):
             print(features)
             result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[features]}),1)))
             print(result)
-            features = [result[0], 1]
+            features = [result[0], 0]
 
 use_neural_network([48, 0])

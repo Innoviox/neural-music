@@ -61,7 +61,7 @@ if __name__ == '__main__':
     import os
     files = []
     for root, dirs, fs in os.walk('samples'):
-        if not dirs:
+        if not dirs and 'bach' in root:
             for file in fs:
                 files.append(os.path.join(root, file))
     train_x, train_y, test_x, test_y, n_classes = create_feature_sets_and_labels(files)
