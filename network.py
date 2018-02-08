@@ -69,7 +69,7 @@ def train_neural_network(x):
         save = saver.save(sess, "./model.ckpt")
         print("Model saved to file:", save)
 
-train_neural_network(x)
+#train_neural_network(x)
 
 def use_neural_network(input_data):
     prediction = neural_network_model(x)
@@ -80,4 +80,10 @@ def use_neural_network(input_data):
         saver = tf.train.Saver()
         sess.run(tf.global_variables_initializer())
         saver.restore(sess,"model.ckpt")
- 
+     
+        note = input_data
+        features = note[:]
+        result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[features]}),1)))
+        print(result)
+
+use_neural_network([48, 0])

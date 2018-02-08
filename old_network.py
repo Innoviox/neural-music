@@ -64,3 +64,32 @@ def train_neural_network(x):
         print('Accuracy:',accuracy.eval({x:mnist.test.images, y:mnist.test.labels}))
 
 train_neural_network(x)
+
+def use_neural_network(input_data):
+    prediction = neural_network_model(x)
+    with open('lexicon.pickle','rb') as f:
+        lexicon = pickle.load(f)
+        
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        saver.restore(sess,"model.ckpt")
+        current_words = word_tokenize(input_data.lower())
+        current_words = [lemmatizer.lemmatize(i) for i in current_words]
+        features = np.zeros(len(lexicon))
+
+        for word in current_words:
+            if word.lower() in lexicon:
+                index_value = lexicon.index(word.lower())
+                # OR DO +=1, test both
+                features[index_value] += 1
+
+        features = np.array(list(features))
+        # pos: [1,0] , argmax: 0
+        # neg: [0,1] , argmax: 1
+        result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[features]}),1)))
+        print(prediction.eval(feed_dict={x:[features]}))
+        if result[0] == 0:
+            print('Positive:',input_data)
+        elif result[0] == 1:
+            print('Negative:',input_data)
+            

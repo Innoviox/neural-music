@@ -15,10 +15,9 @@ def read_notes(fn):
             if isinstance(note, midi.NoteOnEvent):
                 notes.append(note.data)
     print("Read:", len(notes), "notes")
-    print(notes)
     return notes
 
-read_notes('samples/bach/bach_846.mid')
+# read_notes('samples/bach/bach_846.mid')
 
 def sample_handling(files): #, notes, classification):
     def _sample_handling(sample):
