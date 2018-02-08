@@ -15,9 +15,10 @@ def read_notes(fn):
             if isinstance(note, midi.NoteOnEvent):
                 notes.append(note.data)
     print("Read:", len(notes), "notes")
+    print(notes)
     return notes
 
-# read_notes('bach/bach_846.mid')
+read_notes('samples/bach/bach_846.mid')
 
 def sample_handling(files): #, notes, classification):
     def _sample_handling(sample):
@@ -56,9 +57,14 @@ def create_feature_sets_and_labels(files, test_size = 0.1):
     test_x = list(features[:,0][-testing_size:])
     test_y = list(features[:,1][-testing_size:])
     return train_x, train_y, test_x, test_y, n_classes
-    
-files = ['samples/bach/bach_846.mid', 'samples/bach/bach_847.mid', 'samples/bach/bach_850.mid']
+
 if __name__ == '__main__':
+    import os
+    files = []
+    for root, dirs, fs in os.walk('samples'):
+        if not dirs:
+            for file in fs:
+                files.append(os.path.join(root, file))
     train_x, train_y, test_x, test_y, n_classes = create_feature_sets_and_labels(files)
     # if you want to pickle this data:
     with open('note_features.pickle','wb') as f:
