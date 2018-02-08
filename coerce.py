@@ -32,12 +32,18 @@ def sample_handling(files): #, notes, classification):
 def create_feature_sets_and_labels(files, test_size = 0.1):
     _features = np.array(sample_handling(files))
     testing_size = int(test_size*len(_features))
-    classes = np.unique(_features[:,0][:-testing_size])
-    n_classes = len(classes)
+    #print(_features)
+    classes = _features[:,0][:-testing_size]
+    uns = np.unique(classes)
+    n_classes = len(uns)
     features = []
     for f in _features:
         result = np.zeros(n_classes)
-        result[np.where(classes==f[1])[0]] = 1
+        #print(classes, f[1], classes==f[1], np.where(classes==f[1])[0])
+        #print(list(classes).index(f[1]))
+        result[np.where(uns==f[1][0])] = 1
+        #print(np.where(uns==f[1][0]))
+        #input(result)#, np.where(classes==f[1])[0], list(classes).index(f[1]))
         features.append([f[0], result])
     
     random.shuffle(features)

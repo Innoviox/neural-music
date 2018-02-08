@@ -9,7 +9,7 @@ n_nodes_hl2 = 500
 #n_classes = 2
 hm_data = 2000000
 
-batch_size = 2
+batch_size = 100
 hm_epochs = 10
 
 n = 2
@@ -44,6 +44,7 @@ def neural_network_model(data):
 
 def train_neural_network(x):
     prediction = neural_network_model(x)
+    print(train_y[0])
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=prediction, labels=y))
     optimizer = tf.train.AdamOptimizer().minimize(cost)
 
@@ -62,11 +63,11 @@ def train_neural_network(x):
                 _, c = sess.run([optimizer, cost], feed_dict={x: batch_x, y: batch_y})
                 epoch_loss += c
                 i+=batch_size                  
-            print('Epoch', epoch, 'completed out of', hm_epochs, 'loss:', epoch_loss)
+            print('Epoch', epoch+1, 'completed out of', hm_epochs, 'loss:', epoch_loss)
         correct = tf.equal(tf.argmax(prediction, 1), tf.argmax(y, 1))
         accuracy = tf.reduce_mean(tf.cast(correct, 'float'))
-        print('Accuracy:', accuracy.eval({x:mnist.test.images,y:mnist.test.labels}))
-        save = saver.save(sess, "model.ckpt")
+        print('Accuracy:', accuracy.eval({x:test_x,y:test_y}))
+        save = saver.save(sess, "./model.ckpt")
         print("Model saved to file:", save)
 
 train_neural_network(x)
