@@ -80,10 +80,11 @@ def use_neural_network(input_data):
         saver = tf.train.Saver()
         sess.run(tf.global_variables_initializer())
         saver.restore(sess,"model.ckpt")
-     
-        note = input_data
-        features = note[:]
-        result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[features]}),1)))
-        print(result)
+        features = input_data[:]
+        while 1:
+            print(features)
+            result = (sess.run(tf.argmax(prediction.eval(feed_dict={x:[features]}),1)))
+            print(result)
+            features = [result[0], 1]
 
 use_neural_network([48, 0])
